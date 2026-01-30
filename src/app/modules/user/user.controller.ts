@@ -5,7 +5,8 @@ import sendResponse from "../../shared/sendResponse";
 import HttpStatus from "http-status";
 
 const createPatient = catchAsync(async (req: Request, res: Response) => {
-  const result = await UserService.createPatient(req.body);
+  const result = await UserService.createPatient(req);
+  // console.log(req.body);
   sendResponse(res, {
     statusCode: HttpStatus.CREATED,
     success: true,
