@@ -1,6 +1,15 @@
 import z from "zod";
 
-const createPatientValidationSchema = z.object({
+const adminValidationSchema = z.object({
+  password: z.string(),
+  admin: z.object({
+    name: z.string().nonempty("Name is required"),
+    email: z.string().nonempty("Email is required"),
+    contactNumber: z.string().nonempty("contact number is required"),
+  }),
+});
+
+const PatientValidationSchema = z.object({
   password: z.string(),
   patient: z.object({
     name: z.string().nonempty("Name is required"),
@@ -9,7 +18,7 @@ const createPatientValidationSchema = z.object({
   }),
 });
 
-const createDoctorValidationSchema = z.object({
+const DoctorValidationSchema = z.object({
   password: z.string(),
   doctor: z.object({
     name: z.string().nonempty("Name is required"),
@@ -30,6 +39,7 @@ const createDoctorValidationSchema = z.object({
 });
 
 export const UserValidation = {
-  createPatientValidationSchema,
-  createDoctorValidationSchema,
+  PatientValidationSchema,
+  DoctorValidationSchema,
+  adminValidationSchema,
 };
