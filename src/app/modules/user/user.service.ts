@@ -67,8 +67,12 @@ const createDoctor = async (req: Request) => {
   return result;
 };
 
-const getAllFormDB = async () => {
-  const results = await prisma.user.findMany();
+const getAllFormDB = async (limit: number, page: number) => {
+  const skip = (page - 1) * limit;
+  const results = await prisma.user.findMany({
+    skip,
+    take: limit,
+  });
   return results;
 };
 

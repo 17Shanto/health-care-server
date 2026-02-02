@@ -35,7 +35,9 @@ const createDoctor = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllFormDB = catchAsync(async (req: Request, res: Response) => {
-  const result = await UserService.getAllFormDB();
+  const limit = Number(req.query.limit);
+  const page = Number(req.query.page);
+  const result = await UserService.getAllFormDB(limit, page);
   sendResponse(res, {
     statusCode: HttpStatus.OK,
     success: true,
