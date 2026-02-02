@@ -35,9 +35,18 @@ const createDoctor = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllFormDB = catchAsync(async (req: Request, res: Response) => {
-  const limit = Number(req.query.limit);
-  const page = Number(req.query.page);
-  const result = await UserService.getAllFormDB(limit, page);
+  const limit = Number(req.query.limit) || 10;
+  const page = Number(req.query.page) || 1;
+  const search = req.query.search as string;
+  const sortBy = req.query.sortBy as string;
+  const sortOrder = req.query.sortOrder as string;
+  const result = await UserService.getAllFormDB(
+    limit,
+    page,
+    search,
+    sortBy,
+    sortOrder,
+  );
   sendResponse(res, {
     statusCode: HttpStatus.OK,
     success: true,

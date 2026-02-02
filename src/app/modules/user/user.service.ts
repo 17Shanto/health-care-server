@@ -1,8 +1,9 @@
 import { Request } from "express";
 import { prisma } from "../../../lib/prisma";
-import { createPatientInput } from "./user.interface";
 import bcrypt from "bcryptjs";
 import { fileUploader } from "../../helper/fileUploader";
+import { Prisma } from "../../../generated/prisma/client";
+import { UserWhereInput } from "../../../generated/prisma/models";
 
 const createAdmin = async (req: Request) => {
   if (req.file) {
@@ -67,11 +68,35 @@ const createDoctor = async (req: Request) => {
   return result;
 };
 
-const getAllFormDB = async (limit: number, page: number) => {
+const getAllFormDB = async (
+  limit: number,
+  page: number,
+  search: string,
+  sortBy: string,
+  sortOrder: string,
+) => {
   const skip = (page - 1) * limit;
+
+  const andConditions: Prisma.UserWhereInput[] = [];
+  if (search) {
+    andConditions.push({
+      email: { contains: search, mode: "insensitive" },
+    });
+  }
+
+  const where: UserWhereInput =
+    andConditions.length > 0 ? { AND: andConditions } : {};
+
   const results = await prisma.user.findMany({
+    where,
     skip,
     take: limit,
+    orderBy:
+      sortBy && sortOrder
+        ? { [sortBy]: sortOrder }
+        : {
+            createdAt: "desc",
+          },
   });
   return results;
 };
