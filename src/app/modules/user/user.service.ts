@@ -15,6 +15,7 @@ const createAdmin = async (req: Request) => {
       data: {
         email: req.body.admin.email,
         password: hashPassword,
+        role: req.body.role,
       },
     });
     return await tx.admin.create({
@@ -56,6 +57,7 @@ const createDoctor = async (req: Request) => {
       data: {
         email: req.body.doctor.email,
         password: hashPassword,
+        role: req.body.role,
       },
     });
     return await tx.doctor.create({
