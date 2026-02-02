@@ -6,6 +6,8 @@ import { json } from "zod";
 
 const router = express.Router();
 
+router.get("/", UserController.getAllFormDB);
+
 router.post(
   "/create-patient",
   fileUploader.upload.single("file"),

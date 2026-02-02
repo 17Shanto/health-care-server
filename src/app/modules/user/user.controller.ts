@@ -34,8 +34,19 @@ const createDoctor = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getAllFormDB = catchAsync(async (req: Request, res: Response) => {
+  const result = await UserService.getAllFormDB();
+  sendResponse(res, {
+    statusCode: HttpStatus.OK,
+    success: true,
+    message: "user retrieve successfully ✅",
+    data: result,
+  });
+});
+
 export const UserController = {
   createAdmin,
   createPatient,
   createDoctor,
+  getAllFormDB,
 };
