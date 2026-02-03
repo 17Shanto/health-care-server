@@ -4,6 +4,7 @@ import { UserService } from "./user.service";
 import sendResponse from "../../shared/sendResponse";
 import HttpStatus from "http-status";
 import pick from "../../helper/pick";
+import { userFilterableFields } from "./user.constant";
 
 const createAdmin = catchAsync(async (req: Request, res: Response) => {
   const result = await UserService.createAdmin(req);
@@ -36,19 +37,15 @@ const createDoctor = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllFormDB = catchAsync(async (req: Request, res: Response) => {
-  const filters = pick(req.query, ["status", "role", "email", "search"]);
+  const filters = pick(req.query, userFilterableFields);
   const options = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]);
-  // const limit = Number(req.query.limit) || 10;
-  // const page = Number(req.query.page) || 1;
-  // const search = req.query.search as string;
-  // const sortBy = req.query.sortBy as string;
-  // const sortOrder = req.query.sortOrder as string;
   const result = await UserService.getAllFormDB(filters, options);
   sendResponse(res, {
     statusCode: HttpStatus.OK,
     success: true,
     message: "user retrieve successfully ✅",
-    data: result,
+    meta: result.meta,
+    data: result.data,
   });
 });
 

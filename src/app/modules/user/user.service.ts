@@ -71,7 +71,7 @@ const createDoctor = async (req: Request) => {
 };
 
 const getAllFormDB = async (filters: any, options: any) => {
-  const { limit, skip, sortBy, sortOrder }: any =
+  const { page, limit, skip, sortBy, sortOrder }: any =
     paginationHelper.calculatePagination(options);
   const { search, ...filterData } = filters;
 
@@ -105,7 +105,17 @@ const getAllFormDB = async (filters: any, options: any) => {
     take: limit,
     orderBy: { [sortBy]: sortOrder },
   });
-  return results;
+  const total = await prisma.user.count({
+    where,
+  });
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data: results,
+  };
 };
 
 export const UserService = {
