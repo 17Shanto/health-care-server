@@ -4,6 +4,8 @@ import bcrypt from "bcryptjs";
 import { fileUploader } from "../../helper/fileUploader";
 import { Prisma } from "../../../generated/prisma/client";
 import { UserWhereInput } from "../../../generated/prisma/models";
+import { paginationHelper } from "../../helper/paginationHelper";
+import { userSearchableFields } from "./user.constant";
 
 const createAdmin = async (req: Request) => {
   if (req.file) {
@@ -68,19 +70,29 @@ const createDoctor = async (req: Request) => {
   return result;
 };
 
-const getAllFormDB = async (
-  limit: number,
-  page: number,
-  search: string,
-  sortBy: string,
-  sortOrder: string,
-) => {
-  const skip = (page - 1) * limit;
+const getAllFormDB = async (filters: any, options: any) => {
+  const { limit, skip, sortBy, sortOrder }: any =
+    paginationHelper.calculatePagination(options);
+  const { search, ...filterData } = filters;
 
   const andConditions: Prisma.UserWhereInput[] = [];
   if (search) {
+    // console.log(search);
     andConditions.push({
-      email: { contains: search, mode: "insensitive" },
+      OR: userSearchableFields.map((field) => ({
+        [field]: {
+          contains: search,
+          mode: "insensitive",
+        },
+      })),
+    });
+  }
+
+  if (filterData) {
+    andConditions.push({
+      AND: Object.keys(filterData).map((key) => ({
+        [key]: { equals: (filterData as any)[key] },
+      })),
     });
   }
 
@@ -91,12 +103,7 @@ const getAllFormDB = async (
     where,
     skip,
     take: limit,
-    orderBy:
-      sortBy && sortOrder
-        ? { [sortBy]: sortOrder }
-        : {
-            createdAt: "desc",
-          },
+    orderBy: { [sortBy]: sortOrder },
   });
   return results;
 };

@@ -38,18 +38,12 @@ const createDoctor = catchAsync(async (req: Request, res: Response) => {
 const getAllFormDB = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, ["status", "role", "email", "search"]);
   const options = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]);
-  const limit = Number(req.query.limit) || 10;
-  const page = Number(req.query.page) || 1;
-  const search = req.query.search as string;
-  const sortBy = req.query.sortBy as string;
-  const sortOrder = req.query.sortOrder as string;
-  const result = await UserService.getAllFormDB(
-    limit,
-    page,
-    search,
-    sortBy,
-    sortOrder,
-  );
+  // const limit = Number(req.query.limit) || 10;
+  // const page = Number(req.query.page) || 1;
+  // const search = req.query.search as string;
+  // const sortBy = req.query.sortBy as string;
+  // const sortOrder = req.query.sortOrder as string;
+  const result = await UserService.getAllFormDB(filters, options);
   sendResponse(res, {
     statusCode: HttpStatus.OK,
     success: true,
