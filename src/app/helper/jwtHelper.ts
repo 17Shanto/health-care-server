@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import config from "../../config";
 const generateAccessToken = (payload: any) => {
   const accessToken = jwt.sign(
@@ -24,7 +24,12 @@ const generateRefreshToken = (payload: any) => {
   return refreshToken;
 };
 
+const verifyToken = (token: string) => {
+  return jwt.verify(token, config.jwt_secret_key as any) as JwtPayload;
+};
+
 export const tokenGenerator = {
   generateAccessToken,
   generateRefreshToken,
+  verifyToken,
 };

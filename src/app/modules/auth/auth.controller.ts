@@ -23,7 +23,7 @@ const login = catchAsync(async (req: Request, res: Response) => {
   });
   // console.log(req.body);
   sendResponse(res, {
-    statusCode: HttpStatus.CREATED,
+    statusCode: HttpStatus.OK,
     success: true,
     message: "successfully login ✅",
     data: needPassWordChange,
