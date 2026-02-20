@@ -4,6 +4,6 @@ import { ScheduleController } from "./schedule.controller";
 const router = express.Router();
 
 router.get("/", ScheduleController.schedulesForDoctor);
-
 router.post("/", ScheduleController.insertInoDB);
+router.delete("/:id", ScheduleController.deleteScheduleFromDB);
 export const ScheduleRoutes = router;

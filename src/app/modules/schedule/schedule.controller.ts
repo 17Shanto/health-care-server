@@ -10,7 +10,20 @@ const schedulesForDoctor = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, ["startDateTime", "endDateTime"]);
   const result = await ScheduleService.schedulesForDoctor(filters, options);
   sendResponse(res, {
-    statusCode: HttpStatus.CREATED,
+    statusCode: HttpStatus.OK,
+    success: true,
+    message: "Schedule fetched successfully",
+    meta: result.meta,
+    data: result.data,
+  });
+});
+
+const deleteScheduleFromDB = catchAsync(async (req: Request, res: Response) => {
+  const result = await ScheduleService.deleteScheduleFromDB(
+    String(req.params.id),
+  );
+  sendResponse(res, {
+    statusCode: HttpStatus.OK,
     success: true,
     message: "Schedule fetched successfully",
     data: result,
@@ -30,4 +43,5 @@ const insertInoDB = catchAsync(async (req: Request, res: Response) => {
 export const ScheduleController = {
   insertInoDB,
   schedulesForDoctor,
+  deleteScheduleFromDB,
 };
