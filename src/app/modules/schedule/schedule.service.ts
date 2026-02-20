@@ -91,11 +91,6 @@ const insertInoDB = async (payload: ISchedule): Promise<Schedule[]> => {
     );
 
     while (startDateTime < endDateTime) {
-      // const scheduleData = {
-      //     startDateTime: startDateTime,
-      //     endDateTime: addMinutes(startDateTime, intervalTime)
-      // }
-
       const s = await convertDateTime(startDateTime);
       const e = await convertDateTime(addMinutes(startDateTime, intervalTime));
 
