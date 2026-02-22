@@ -65,7 +65,28 @@ const insertIntoDB = async (user: IJWTPayload, payload: any) => {
   });
 };
 
+const deleteDoctorSchedule = async (user: IJWTPayload, scheduleId: string) => {
+  const doctor = await prisma.doctor.findUnique({
+    where: {
+      email: user.email,
+    },
+  });
+  if (!doctor) {
+    throw new Error("Doctor does not exist");
+  }
+  const result = await prisma.doctorSchedules.delete({
+    where: {
+      doctorId_scheduleId: {
+        doctorId: doctor.id,
+        scheduleId,
+      },
+    },
+  });
+  return result;
+};
+
 export const DoctorScheduleService = {
   insertIntoDB,
   getAllScheduleOfDoctor,
+  deleteDoctorSchedule,
 };
