@@ -1,7 +1,9 @@
 import { Prisma } from "../../../generated/prisma/client";
 import { prisma } from "../../../lib/prisma";
+import AppError from "../../error/appError";
 import { IOptions, paginationHelper } from "../../helper/paginationHelper";
 import { IJWTPayload } from "../../types/common";
+import httpStatus from "http-status";
 
 const getAllScheduleOfDoctor = async (options: IOptions, filters: any) => {
   const { page, limit, skip, sortBy, sortOrder }: any =
@@ -72,7 +74,7 @@ const deleteDoctorSchedule = async (user: IJWTPayload, scheduleId: string) => {
     },
   });
   if (!doctor) {
-    throw new Error("Doctor does not exist");
+    throw new AppError(httpStatus.NOT_FOUND, "Doctor does not exist");
   }
   const result = await prisma.doctorSchedules.delete({
     where: {

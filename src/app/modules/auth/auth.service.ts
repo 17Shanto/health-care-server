@@ -4,6 +4,8 @@ import { prisma } from "../../../lib/prisma";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { tokenGenerator } from "../../helper/jwtHelper";
+import AppError from "../../error/appError";
+import httpStatus from "http-status";
 
 const login = async (payload: { email: string; password: string }) => {
   const user = await prisma.user.findUnique({
@@ -13,7 +15,10 @@ const login = async (payload: { email: string; password: string }) => {
     },
   });
   if (!user) {
-    throw new Error("Invalid credentials or account inactive ❌");
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Invalid credentials or account inactive ❌",
+    );
   }
   const isCorrectPassword = await bcrypt.compare(
     payload.password,
@@ -21,7 +26,7 @@ const login = async (payload: { email: string; password: string }) => {
   );
 
   if (!isCorrectPassword) {
-    throw new Error("Password is incorrect");
+    throw new AppError(httpStatus.BAD_REQUEST, "Password is incorrect");
   }
   const accessToken = tokenGenerator.generateAccessToken({
     email: user.email,

@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { tokenGenerator } from "../helper/jwtHelper";
+import AppError from "../error/appError";
+import httpStatus from "http-status";
 
 const auth = (...roles: string[]) => {
   return async (
@@ -10,12 +12,12 @@ const auth = (...roles: string[]) => {
     try {
       const token = req.cookies.accessToken;
       if (!token) {
-        throw new Error("Your are not authorized");
+        throw new AppError(httpStatus.UNAUTHORIZED, "Your are not authorized");
       }
       const verifyUser = tokenGenerator.verifyToken(token);
       req.user = verifyUser;
       if (roles.length && !roles.includes(verifyUser.role)) {
-        throw new Error("You are not authorized");
+        throw new AppError(httpStatus.UNAUTHORIZED, "You are not authorized");
       }
 
       next();
